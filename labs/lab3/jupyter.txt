@@ -1,0 +1,30 @@
+using DifferentialEquations, Plots
+u0 = [30000, 17000]
+
+p = [-0.45, -0.86, -0.49, -0.73]
+
+function xy(u, p, t)
+    x, y = u
+    a, b, c, h = p
+    dx = a*x + b*y + sin(t+1)
+    dy = c*x + h*y + cos(t+2)
+    return [dx, dy]
+end
+tspan = (0, 1)
+test1 = ODEProblem(xy, u0, tspan, p)
+sol = solve(test1, Tsit5())
+
+
+u0 = [30000, 17000]
+
+p = [-0.34, -0.81, -0.22, -0.91]
+
+function xy(u, p, t)
+    x, y = u
+    a, b, c, h = p
+    dx = a*x + b*y + sin(2*t)
+    dy = c*x*y + h*y + cos(t)
+    return [dx, dy]
+end
+test2 = ODEProblem(xy, u0, tspan, p)
+sol = solve(test2, Tsit5())
