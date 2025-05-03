@@ -1,0 +1,13 @@
+using DifferentialEquations, Plots
+
+
+N = 500
+n0 = 5
+f(n,p,t) = (p[1]+p[2]*n)*(N - n)
+ff(n,p,t) = (p[1]*sin(t)+p[2]*cos(t)*n)*(N-n)
+p1 = [0.55, 0.0001]
+tspan1 = (0.0, 10.0)
+prob1 = ODEProblem(f, n0, tspan1, p1)
+
+sol1 = solve(prob1, Tsit5(), saveat=0.01)
+plot(sol1, markersize =:15, yaxis="N(t)",  label="N(t)")
