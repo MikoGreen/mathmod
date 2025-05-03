@@ -1,0 +1,35 @@
+N = 20000
+t = 0
+I0 = 99
+R0 = 5
+S0 = N - I0 - R0
+alpha = 0.01
+beta = 0.02
+u0 = [S0, I0, R0]
+p = [alpha, beta]
+tspan = (0.0, 200.0)
+
+using Plots
+using DifferentialEquations
+
+# I0 < I*
+function sir(u,p,t)
+    (S,I,R) = u
+    (alpha, beta) = p
+    N = S+I+R
+    dS = 0
+    dI = -beta*I
+    dR = beta*I
+    return [dS, dI, dR]
+end
+
+# I0 > I*
+function sir2(u,p,t)
+    (S,I,R) = u
+    (alpha, beta) = p
+    N = S+I+R
+    dS = -alpha*S
+    dI = alpha*S - beta*I
+    dR = beta*I
+    return [dS, dI, dR]
+end
