@@ -1,0 +1,46 @@
+using DifferentialEquations, Plots
+
+p_cr = 15
+tau1 = 11
+p1 = 8
+tau2 = 14
+p2 = 6
+N = 17
+
+m1 = 2.5
+m2 = 1.5
+q = 1
+
+a1 = p_cr / (tau1^2 * p1^2 * N * q)
+a2 = p_cr / (tau2^2 * p2^2 * N * q)
+b = p_cr / (tau1^2 * p1^2 * tau2^2 * p2^2 * N * q)
+c1 = (p_cr - p1)/(tau1 * p1)
+c2 = (p_cr - p2)/(tau2 * p2)
+
+u0 = [m1, m2]
+p = [a1, a2, b, c1, c2]
+tspan = (0.0, 50.0)
+
+function f1(u,p,t)
+    m1, m2 = u
+    a1, a2, b, c1, c2 = p
+    m1 = m1 - (b/c1) * m1 * m2 - (a1/c1) * m1^2 
+    m2 = (c2/c1) * m2 - (b/c1) * m1 * m2 - (a2/c1) * m2^2
+    return [m1, m2]
+end
+
+prob1 = ODEProblem(f1, u0, tspan, p)
+sol1 = solve(prob1, Tsit5(), saveat=0.01)
+plot(sol1, yaxis="Оборотные средства предприятия", label=["M1" "M2"])
+
+function f2(u,p,t)
+    m1, m2 = u
+    a1, a2, b, c1, c2 = p
+    m1 = m1 - (b/c1+0.001)*m1*m2 - (a1/c1)*m1^2 
+    m2 = (c2/c1)*m2 - (b/c1)*m1*m2 - (a2/c1)*m2^2
+    return [m1, m2]
+end
+
+prob2 = ODEProblem(f2, u0, tspan, p)
+sol2 = solve(prob2, Tsit5(), saveat=0.01)
+plot(sol2, yaxis="Оборотные средства предприятия", label=["M1" "M2"], xlimit=[0,50])
