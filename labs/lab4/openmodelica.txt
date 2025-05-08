@@ -1,0 +1,12 @@
+model lab4
+  parameter Real gamma = 2.0;
+  parameter Real omega = 5.0;
+  parameter Real x0 = 0.0;
+  parameter Real y0 = 1.0;
+  
+  Real x(start = x0);
+  Real y(start = y0);
+equation
+  der(x) = y;
+  der(y) = - gamma * y - omega * x;
+end lab4;

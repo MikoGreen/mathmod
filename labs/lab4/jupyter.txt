@@ -1,0 +1,39 @@
+function harm(dx,x,p,t)
+    - p[1] * dx - p[2] * x
+end
+
+tspan = (0.0, 30.0)
+x0 = 0.0
+dx0 = 1.0
+
+p1 = [0, 5] # 2*gamma, omega^2
+p2 = [2, 5]
+p3 = [4, 1]
+
+function harm_p3(dx,x,p,t)
+    - p[1] * dx - p[2] * x + sin(14*t)
+end
+
+prob1 = SecondOrderODEProblem(harm, dx0, x0, tspan, p1)
+num_sol1 = solve(prob1, Tsit5(), saveat=0.05)
+plot(num_sol1, label = ["y" "x"], xlabel="t", 
+    title = "Колебания без затухания и внешней силы")
+
+plot(num_sol1, label="phase", idxs=(2,1), 
+    title="Фазовый портрет без затухания и внешней силы")
+
+prob2 = SecondOrderODEProblem(harm, dx0, x0, (0.0, 10.0), p2)
+num_sol2 = solve(prob2, Tsit5(), saveat=0.05)
+plot(num_sol2, label = ["y" "x"], xlabel="t", 
+    title = "Колебания c затухания, но без внешней силы")
+
+plot(num_sol2, label="phase", idxs=(2,1), 
+    title="Колебания c затухания, но без внешней силы")
+
+prob3 = SecondOrderODEProblem(harm_p3, dx0, x0, tspan, p3)
+num_sol3 = solve(prob3, Tsit5(), saveat=0.05)
+plot(num_sol3, label = ["y" "x"], xlabel="t", 
+    title = "Колебания c затухания, но без внешней силы")
+
+plot(num_sol3, label="phase", idxs=(2,1), 
+    title="Колебания с затуханием и внешней силой")
