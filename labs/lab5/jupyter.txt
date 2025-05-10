@@ -1,0 +1,23 @@
+using DifferentialEquations, Plots
+
+a = -0.12
+b = -0.041
+c = -0.32
+d = -0.029
+p = [a, b, c, d]
+x0 = 6.0
+y0 = 11.0
+u0 = [x0, y0]
+tspan=(0.0, 200.0)
+
+function lw(u, p, t)
+    a, b, c, d = p
+    x, y = u
+    dx = a*x - b*x*y
+    dy = -c*y + d*x*y
+    return [dx, dy]
+end
+prob1 = ODEProblem(lw, u0, tspan, p)
+sol1 = solve(prob1, Tsit5(), saveat=0.05)
+plot(sol1, label=["x" "y"], title="График изменения численности жертв и хищников")
+plot(sol1, idxs=(2,1), label=["phase"], title="Фазовый портрет")
